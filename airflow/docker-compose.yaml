@@ -29,7 +29,7 @@ services:
       - .env
     volumes:
       - ./dags:/opt/airflow/dags
-      - ./dbt:/opt/airflow/dbt
+      - ../dbt:/opt/airflow/dbt
       - ./logs:/opt/airflow/logs
       - "${LOCAL_GCS_JSON_CREDENTIALS_PATH}:${CONTAINER_JSON_CREDENTIALS_PATH}"
     ports:
