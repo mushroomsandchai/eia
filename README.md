@@ -27,7 +27,7 @@ This project builds a data pipeline for Energy Information Administration (EIA) 
 │   ├── seeds/
 │   └── dbt_project.yml
 │   └── profiles.yml
-├── terraform/.            # Terraform
+├── terraform              # Terraform
 │   └── main.tf
 │   └── variables.tf   
 ├── docker-compose.yml     # Docker services
