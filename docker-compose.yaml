@@ -28,9 +28,9 @@ services:
     env_file:
       - .env
     volumes:
-      - ./dags:/opt/airflow/dags
-      - ../dbt:/opt/airflow/dbt
-      - ./logs:/opt/airflow/logs
+      - ./airflow/dags:/opt/airflow/dags
+      - ./dbt:/opt/airflow/dbt
+      - ./airflow/logs:/opt/airflow/logs
       - "${LOCAL_GCS_JSON_CREDENTIALS_PATH}:${CONTAINER_JSON_CREDENTIALS_PATH}"
     ports:
       - "8080:8080"
