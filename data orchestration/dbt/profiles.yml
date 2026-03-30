@@ -1,0 +1,14 @@
+eia:
+  outputs:
+    dev:
+      job_execution_timeout_seconds: 30
+      job_retries: 1
+      method: service-account
+      priority: interactive
+      threads: 1
+      type: bigquery
+      project: "{{ env_var('PROJECT') }}"
+      dataset: "{{ env_var('DATASET') }}"
+      keyfile: "{{ env_var('GOOGLE_APPLICATION_CREDENTIALS') }}"
+      location: "{{ env_var('DATASET_LOCATION') }}"
+  target: dev
