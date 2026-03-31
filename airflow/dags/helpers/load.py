@@ -42,7 +42,7 @@ def load_table(type, start_date = None, end_date = None, interval = 'daily'):
         )
     elif interval == 'batch_load':
         load_job = client.load_table_from_uri(
-            source_uris = f'gs://{bucket}/api/{type}/*/*.parquet',
+            source_uris = f'gs://{bucket}/api/{type}/*.parquet',
             destination = table_id,
             job_config = job_config
         )
