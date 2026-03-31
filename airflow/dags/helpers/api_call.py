@@ -43,8 +43,14 @@ def api_call(endpoint):
         params["offset"] = params["offset"] + page_size
 
     df['ingestion_time'] = datetime.now()
+
+
+    for column in df.columns:
+        df = renamer(df, column)
+
     print(f'Total number of records shown by the API: {total}')
     print(f'Total number of reocrds returned by the API: {df.shape[0]}')
+
     if total != df.shape[0]:
         raise ValueError('Total number of records found is not equal to the number of written records.')
     else:
@@ -52,3 +58,7 @@ def api_call(endpoint):
         df.to_parquet(buffer, index = False)
         buffer.seek(0)
         return(buffer)
+
+def renamer(df, column):
+    new_name = column.lower().replace('-', '_')
+    return(df.rename(columns = {column: new_name}))
