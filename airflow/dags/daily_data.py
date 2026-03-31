@@ -25,14 +25,22 @@ def main():
         from helpers.fetch_endpoints import points
         import os
         logical_date = get_current_context()['logical_date']
-        lag_days = int(os.environ.get('LAG_DAYS', 3))
-        run_date = logical_date - timedelta(days = lag_days)
+        window_days = int(os.environ.get('WINDOW_DAYS', 7))
 
-        start_date = run_date.strftime('%Y-%m-%dT00')
-        end_date = run_date.strftime('%Y-%m-%dT23')
+        end_date_dt = logical_date - timedelta(days=1)
 
-        endpoints = points(start_date, end_date, run_date)
-        return(endpoints)
+        all_endpoints = []
+
+        for i in range(window_days):
+            run_date = end_date_dt - timedelta(days=i)
+
+            start_date = run_date.strftime('%Y-%m-%dT00')
+            end_date = run_date.strftime('%Y-%m-%dT23')
+
+            daily_endpoints = points(start_date, end_date, run_date)
+            all_endpoints.extend(daily_endpoints)
+
+        return all_endpoints
 
 
     @task
