@@ -7,7 +7,7 @@ def points(start_date, end_date, run_date) -> dict:
                 ]
 
     for endpoint in endpoints:
-        endpoint['directory'] = f'api/{endpoint['type']}/{run_date.year}/{run_date.month:02d}/'
+        endpoint['directory'] = f"api/{endpoint['type']}/{run_date.year}/{run_date.month:02d}/"
         endpoint['dtobject'] = run_date
         endpoint['start_date'] = start_date
         endpoint['end_date'] = end_date

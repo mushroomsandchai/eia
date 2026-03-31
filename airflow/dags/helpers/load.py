@@ -15,7 +15,7 @@ def upload_blob(buffer, destination_blob_name):
     print(f"Buffer uploaded to {destination_blob_name}.")
 
 # Loads a table to data warehouse using files in the datalake.
-def load_table(type, buffer = None, interval = 'daily'):
+def load_table(type, start_date = None, end_date = None, interval = 'daily'):
     from google.cloud import bigquery
     import os
     
@@ -26,24 +26,23 @@ def load_table(type, buffer = None, interval = 'daily'):
 
     client = bigquery.Client()
 
-    if interval == 'daily':
-        buffer.seek(0)
-        job_config = bigquery.LoadJobConfig(
-            source_format=bigquery.SourceFormat.PARQUET,
-            write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE,
-        )
+    bucket = os.environ.get('BUCKET_NAME')
+    job_config = bigquery.LoadJobConfig(
+                    source_format=bigquery.SourceFormat.PARQUET,
+                )
 
-        load_job = client.load_table_from_file(
-            buffer, table_id, job_config = job_config
+    if interval == 'daily':
+        from helpers.fetch_uris import uri
+
+        uris = uri(bucket, type, start_date, end_date)
+        load_job = client.load_table_from_uri(
+            source_uris = uris,
+            destination = table_id,
+            job_config = job_config
         )
     elif interval == 'batch_load':
-        bucket = os.environ.get('BUCKET_NAME')
-        job_config = bigquery.LoadJobConfig(
-                        source_format=bigquery.SourceFormat.PARQUET,
-                    )
-
         load_job = client.load_table_from_uri(
-            source_uris = f'gs://{bucket}/api/{type}/*',
+            source_uris = f'gs://{bucket}/api/{type}/*/*.parquet',
             destination = table_id,
             job_config = job_config
         )
