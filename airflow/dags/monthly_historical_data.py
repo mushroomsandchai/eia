@@ -1,4 +1,3 @@
-
 from datetime import datetime, timedelta
 from airflow.sdk import task, dag, get_current_context
 
