@@ -13,7 +13,7 @@ default_args = {
                         demand forecast and demand by subregion data by day from EIA API and store in GCP bucket.""",
     schedule = "@daily",
     start_date = datetime(2026, 3, 1),
-    catchup = False,
+    catchup = True,
     max_active_runs = 1,
     default_args = default_args,
     tags = ['project', 'datalake', 'raw', 'generation', 'demand forecast', 'demand by subregion', 'interchange']
