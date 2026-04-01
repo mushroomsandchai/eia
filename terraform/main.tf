@@ -29,8 +29,9 @@ resource "google_storage_bucket" "no-age-enabled" {
 }
 
 resource "google_bigquery_dataset" "dataset" {
-  project       = var.project_id
-  dataset_id    = var.dataset_name
-  friendly_name = "eia"
-  location      = var.project_location
+  project                    = var.project_id
+  dataset_id                 = var.dataset_name
+  friendly_name              = "eia"
+  location                   = var.project_location
+  delete_contents_on_destroy = true
 }
