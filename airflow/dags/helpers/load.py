@@ -22,14 +22,31 @@ def load_table(type, start_date = None, end_date = None, interval = 'daily'):
     # Writes an external table in big query.
     project = os.environ.get('PROJECT')
     dataset = os.environ.get('DATASET')
+    bucket = os.environ.get('BUCKET_NAME')
+
     table_id = f'{project}.{dataset}.landing_{type}'
 
-    client = bigquery.Client()
+    if type == 'generation':
+        cluster = ['respondent_id', 'recorded_date']
+    elif type == 'interchage':
+        cluster = ['fromba', 'toba']
+    elif type == 'demand_forecast':
+        cluster = ['respondent', 'type']
+    elif type == 'demand_by_subregion':
+        cluster = ['parent', 'subba']
 
-    bucket = os.environ.get('BUCKET_NAME')
+    client = bigquery.Client()
+    
     job_config = bigquery.LoadJobConfig(
-                    source_format=bigquery.SourceFormat.PARQUET,
-                )
+                        source_format = bigquery.SourceFormat.PARQUET,
+                        time_partitioning = bigquery.TimePartitioning(
+                            type_ = bigquery.TimePartitioningType.DAY,
+                            field = 'partition_date',
+                            expiration_ms = None,
+                        ),
+                        clustering_fields = cluster
+                        write_disposition = bigquery.WriteDisposition.WRITE_APPEND,
+                    )
 
     if interval == 'daily':
         from helpers.fetch_uris import uri

@@ -43,6 +43,7 @@ def api_call(endpoint):
         params["offset"] = params["offset"] + page_size
 
     df['ingestion_time'] = datetime.now()
+    df['partition_date'] = pd.to_datetime(df['period']).dt.date
 
 
     for column in df.columns:

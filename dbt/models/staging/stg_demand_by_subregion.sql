@@ -1,7 +1,7 @@
 {{ config(materialized = 'view') }}
 with renamed as (
     select
-        cast(substr(period, 1, 10) as date) as recorded_date,
+        cast(partition_date as date) as recorded_date,
         cast(substr(period, 12, 2) as int64) as recorded_hour,
         cast(subba_name as string) as sub_ba,
         upper(cast(subba as string)) as sub_ba_id,
