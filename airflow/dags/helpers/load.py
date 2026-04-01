@@ -27,8 +27,8 @@ def load_table(type, start_date = None, end_date = None, interval = 'daily'):
     table_id = f'{project}.{dataset}.landing_{type}'
 
     if type == 'generation':
-        cluster = ['respondent_id', 'recorded_date']
-    elif type == 'interchage':
+        cluster = ['respondent', 'fueltype']
+    elif type == 'interchange':
         cluster = ['fromba', 'toba']
     elif type == 'demand_forecast':
         cluster = ['respondent', 'type']
@@ -44,7 +44,7 @@ def load_table(type, start_date = None, end_date = None, interval = 'daily'):
                             field = 'partition_date',
                             expiration_ms = None,
                         ),
-                        clustering_fields = cluster
+                        clustering_fields = cluster,
                         write_disposition = bigquery.WriteDisposition.WRITE_APPEND,
                     )
 
