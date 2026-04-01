@@ -1,0 +1,9 @@
+sources:
+  - name: landing
+    database: "{{ env_var('PROJECT') }}"  
+    schema:  "{{ env_var('DATASET') }}"
+    tables:
+      - name: landing_generation
+      - name: landing_demand_forecast
+      - name: landing_demand_by_subregion
+      - name: landing_interchange
