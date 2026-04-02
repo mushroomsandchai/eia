@@ -2,11 +2,15 @@
     config(
         materialized = 'incremental',
         partition_by = {
-            'field' = 'recorded_date',
-            'data_type' = 'date',
-            'granularity' = 'day',
+            'field': 'recorded_date',
+            'data_type': 'date',
+            'granularity': 'day',
         },
-        cluster_by = ['respondent_id', 'fuel_id']
+        cluster_by = ['respondent_id', 'fuel_id'],
+        unique_key = ['recorded_date', 'recorded_hour', 'respondent_id', 'fuel_id'],
+        incremental_predicates = [
+            "DBT_INTERNAL_DEST.recorded_date >= date_sub(current_date(), interval 7 day)"
+        ]
 ) }}
 with filtered as (
     select
@@ -20,8 +24,7 @@ with filtered as (
     from
         {{ ref('stg_generation') }}
     {% if is_incremental() %}
-        where
-            recorded_date >= current_date - {{ env_var('WINDOW_DAYS', 7) }}
+        {{ get_filter(env_var('WINDOW_DAYS', 7)) }}
     {% endif %}
 )
 select
