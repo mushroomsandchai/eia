@@ -29,6 +29,10 @@ def api_call(endpoint):
     first_page = fetch_page(url, params, True)
     num_records = first_page["response"]["total"]
     total = int(num_records)
+    
+    if total == 0:
+        return None
+    
     page_size = 5000
     num_pages = math.ceil(total / page_size)
     print(f'A total of {num_records} records are being fetched from {num_pages} pages. Time for some chai/coffee while the task finishes.')

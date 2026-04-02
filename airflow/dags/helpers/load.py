@@ -16,7 +16,7 @@ def upload_blob(buffer, destination_blob_name):
 
 # Loads a table to data warehouse using files in the datalake.
 def load_table(type, start_date = None, end_date = None, interval = 'daily'):
-    from google.cloud import bigquery
+    from google.cloud import bigquery, storage
     import os
     
     # Writes an external table in big query.
@@ -36,6 +36,8 @@ def load_table(type, start_date = None, end_date = None, interval = 'daily'):
         cluster = ['parent', 'subba']
 
     client = bigquery.Client()
+    storage_client = storage.Client()
+    gcpbucket = storage_client.bucket(bucket)
     
     job_config = bigquery.LoadJobConfig(
                         source_format = bigquery.SourceFormat.PARQUET,
@@ -51,20 +53,29 @@ def load_table(type, start_date = None, end_date = None, interval = 'daily'):
     if interval == 'daily':
         from helpers.fetch_uris import uri
 
+        if type == 'demand_forecast':
+            from datetime import timedelta
+            end_date = end_date + timedelta(days = 1)
         uris = uri(bucket, type, start_date, end_date)
-        load_job = client.load_table_from_uri(
-            source_uris = uris,
-            destination = table_id,
-            job_config = job_config
-        )
+        
+        for u in uris:
+            blob = gcpbucket.blob(u)
+
+            if blob:
+                load_job = client.load_table_from_uri(
+                    source_uris = u,
+                    destination = table_id,
+                    job_config = job_config
+                )
+
     elif interval == 'batch_load':
-        load_job = client.load_table_from_uri(
-            source_uris = f'gs://{bucket}/api/{type}/*.parquet',
-            destination = table_id,
-            job_config = job_config
-        )
+        source_uri = f'gs://{bucket}/api/{type}/*.parquet'
 
-    load_job.result()
+        blob = gcpbucket.blob(source_uri)
 
-    destination_table = client.get_table(table_id)
-    print(f"Loaded {destination_table.num_rows} rows.")
+        if blob:
+            load_job = client.load_table_from_uri(
+                source_uris = source_uri,
+                destination = table_id,
+                job_config = job_config
+            )
