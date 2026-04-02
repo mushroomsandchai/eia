@@ -80,8 +80,8 @@ def main():
         types = ['generation', 'demand_forecast', 'demand_by_subregion', 'interchange']
         
         if logical_date.date() == datetime.now().date():
-            start_date = get_current_context()['logical_date'] - timedelta(days = int(os.environ.get('WINDOW_DAYS', 7)))
-            end_date = get_current_context()['logical_date'] - timedelta(days = 1)
+            start_date = logical_date - timedelta(days = int(os.environ.get('WINDOW_DAYS', 7)))
+            end_date = logical_date - timedelta(days = 1)
         else:
             start_date, end_date = logical_date, logical_date
         for type in types:
