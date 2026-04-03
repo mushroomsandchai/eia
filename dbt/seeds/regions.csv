@@ -1,0 +1,17 @@
+region_or_country_code,region_or_country_name,time_zone
+CAL,California,Pacific
+CAR,Carolinas,Eastern
+CENT,Central,Central
+FLA,Florida,Eastern
+MIDA,Mid-Atlantic,Eastern
+MIDW,Midwest,Eastern
+NE,New England,Eastern
+NW,Northwest,Mountain
+NY,New York,Eastern
+SE,Southeast,Central
+SW,Southwest,Arizona
+TEN,Tennessee,Central
+TEX,Texas,Central
+US48,United States Lower 48,Eastern
+CAN,Canada,
+MEX,Mexico,

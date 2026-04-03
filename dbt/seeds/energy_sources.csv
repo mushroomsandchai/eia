@@ -1,0 +1,18 @@
+energy_source_code,energy_source_name
+SYS,All energy sources
+BAT,Battery storage
+WNB,Wind with integrated battery storage
+SNB,Solar with integrated battery storage
+PS,Pumped storage
+OES,Other energy storage
+UES,Unknown energy storage
+WND,Wind
+SUN,Solar
+WAT,Hydro and pumped storage
+GEO,Geothermal
+OTH,Other
+OIL,Petroleum
+NG,Natural gas
+COL,Coal
+NUC,Nuclear
+UNK,Unknown
