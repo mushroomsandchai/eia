@@ -17,7 +17,7 @@ default_args = {
                         This way, all the data gets loaded at once and is ready for daily consumption of API values.""",
     schedule = "@monthly",
     start_date = datetime(2019, 1, 1),
-    end_date = datetime(2026, 2, 28),
+    end_date = datetime(2019, 1, 31),
     catchup = True,
     max_active_runs = 4,
     default_args = default_args,
@@ -27,20 +27,10 @@ def main():
     @task
     def get_endpoints():
         from helpers.fetch_endpoints import points
-        from calendar import monthrange
-
-        logical_date = get_current_context()['logical_date']
         
-        start_date = logical_date.strftime('%Y-%m-%dT00')
+        logical_date = get_current_context()['logical_date']
+        endpoints = points(logical_date, type = 'monthly')
 
-        end_day = monthrange(logical_date.year, logical_date.month)[1]
-        end_date = datetime(logical_date.year, logical_date.month, end_day)
-        end_date = end_date.strftime('%Y-%m-%dT23')
-
-        print(start_date)
-        print(end_date)
-
-        endpoints = points(start_date, end_date, logical_date)
         return(endpoints)
 
 

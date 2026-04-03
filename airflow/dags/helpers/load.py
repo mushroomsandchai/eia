@@ -15,14 +15,17 @@ def upload_blob(buffer, destination_blob_name):
     print(f"Buffer uploaded to {destination_blob_name}.")
 
 # Loads a table to data warehouse using files in the datalake.
-def load_table(type, start_date = None, end_date = None, interval = 'daily'):
+def load_table(type, uri = None, interval = 'daily'):
     from google.cloud import bigquery, storage
     import os
     
-    # Writes an external table in big query.
     project = os.environ.get('PROJECT')
     dataset = os.environ.get('DATASET')
     bucket = os.environ.get('BUCKET_NAME')
+
+    client = bigquery.Client()
+    storage_client = storage.Client()
+    gcpbucket = storage_client.bucket(bucket)
 
     table_id = f'{project}.{dataset}.landing_{type}'
 
@@ -34,10 +37,6 @@ def load_table(type, start_date = None, end_date = None, interval = 'daily'):
         cluster = ['respondent', 'type']
     elif type == 'demand_by_subregion':
         cluster = ['parent', 'subba']
-
-    client = bigquery.Client()
-    storage_client = storage.Client()
-    gcpbucket = storage_client.bucket(bucket)
     
     job_config = bigquery.LoadJobConfig(
                         source_format = bigquery.SourceFormat.PARQUET,
@@ -51,26 +50,22 @@ def load_table(type, start_date = None, end_date = None, interval = 'daily'):
                     )
 
     if interval == 'daily':
-        from helpers.fetch_uris import uri
+        source_uri = f'gs://{bucket}/{uri}'
 
-        if type == 'demand_forecast':
-            from datetime import timedelta
-            end_date = end_date + timedelta(days = 1)
-        uris = uri(bucket, type, start_date, end_date)
-        
-        for u in uris:
-            blob = gcpbucket.blob(u)
+        # check if blob exists
+        blob = gcpbucket.blob(source_uri)
 
-            if blob:
-                load_job = client.load_table_from_uri(
-                    source_uris = u,
-                    destination = table_id,
-                    job_config = job_config
-                )
+        if blob:
+            load_job = client.load_table_from_uri(
+                source_uris = source_uri,
+                destination = table_id,
+                job_config = job_config
+            )
 
     elif interval == 'batch_load':
         source_uri = f'gs://{bucket}/api/{type}/*.parquet'
 
+        # check if blob exists
         blob = gcpbucket.blob(source_uri)
 
         if blob:

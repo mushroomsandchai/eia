@@ -4,7 +4,7 @@ from airflow.exceptions import AirflowSkipException
 
 default_args = {
     'retries': 2,
-    'retry_delay': timedelta(minutes = 0)
+    'retry_delay': timedelta(minutes = 1)
 }
 
 @dag(
@@ -26,36 +26,10 @@ def main():
         logical_date = get_current_context()['logical_date']
 
         if logical_date.date() == datetime.now().date():
-            import os
-            window_days = int(os.environ.get('WINDOW_DAYS', 7))
-
-            end_date_dt = logical_date - timedelta(days=1)
-
-            all_endpoints = []
-
-            for i in range(window_days):
-                run_date = end_date_dt - timedelta(days=i)
-
-                start_date = run_date.strftime('%Y-%m-%dT00')
-                end_date = run_date.strftime('%Y-%m-%dT23')
-
-                daily_endpoints = points(start_date, end_date, run_date)
-                all_endpoints.extend(daily_endpoints)
-
-            start_date = logical_date.strftime('%Y-%m-%dT00')
-            end_date = logical_date.strftime('%Y-%m-%dT23')
-            forecast = points(start_date, end_date, logical_date)
-            for point in forecast:
-                if point['type'] == 'demand_forecast':
-                    all_endpoints.append(point)
-                    
-            return all_endpoints
+            endpoints = points(logical_date, type = 'refresh')
         else:
-            run_date = logical_date - timedelta(days = 1)
-            start_date = run_date.strftime('%Y-%m-%dT00')
-            end_date = run_date.strftime('%Y-%m-%dT23')
-            endpoints = points(start_date, end_date, logical_date)
-            return(endpoints)
+            endpoints = points(logical_date)
+        return(endpoints)
 
 
     @task
@@ -72,20 +46,12 @@ def main():
     
 
     @task
-    def load_tables():
+    def load_tables(endpoint):
         from helpers.load import load_table
         import os
-
-        logical_date = get_current_context()['logical_date']
-        types = ['generation', 'demand_forecast', 'demand_by_subregion', 'interchange']
         
-        if logical_date.date() == datetime.now().date():
-            start_date = logical_date - timedelta(days = int(os.environ.get('WINDOW_DAYS', 7)))
-            end_date = logical_date - timedelta(days = 1)
-        else:
-            start_date, end_date = logical_date, logical_date
-        for type in types:
-            load_table(type, start_date, end_date, interval = 'daily')
+        uri = f"{endpoint['directory']}{endpoint['dtobject'].day:02d}.parquet"
+        load_table(endpoint['type'], uri, interval = 'daily')
 
 
     from cosmos import DbtTaskGroup
@@ -110,7 +76,7 @@ def main():
 
     endpoints = get_endpoints()
     ingestion = ingest.expand(endpoint = endpoints)    
-    loader = load_tables()
+    loader = load_tables.expand(endpoint = endpoints)
 
     ingestion >> loader >> dbt_merge
 
