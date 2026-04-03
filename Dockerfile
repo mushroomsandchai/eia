@@ -10,7 +10,7 @@ USER airflow
 
 # Install Cosmos into the main Airflow 3.1.6 env
 # We use --upgrade to ensure it handles the new Airflow provider structures
-RUN pip install --no-cache-dir --upgrade astronomer-cosmos openpyxl
+RUN pip install --no-cache-dir --upgrade astronomer-cosmos openpyxl streamlit altair
 
 # Create the lightweight dbt-bigquery bubble
 RUN python -m venv /opt/airflow/.dbt_venv && \

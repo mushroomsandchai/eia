@@ -36,7 +36,3 @@ models:
       +materialized: view
 
 seeds:
-  eia:
-    utc_offset:
-      +column_types:
-        utc_offset_hours: float64

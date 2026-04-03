@@ -1,0 +1,88 @@
+year,fuel,energy_type,total_generation
+2025,Battery storage,non-renewable,7387700
+2024,Battery storage,non-renewable,714438
+2026,Battery storage,non-renewable,607721
+2019,Coal,non-renewable,937920125
+2021,Coal,non-renewable,901881117
+2022,Coal,non-renewable,847910142
+2020,Coal,non-renewable,765287452
+2025,Coal,non-renewable,752808897
+2023,Coal,non-renewable,690553910
+2024,Coal,non-renewable,672217337
+2026,Coal,non-renewable,179733800
+2025,Geothermal,renewable,4062024
+2026,Geothermal,renewable,2582030
+2024,Geothermal,renewable,5056
+2019,Hydro and pumped storage,renewable,295972253
+2020,Hydro and pumped storage,renewable,280361584
+2022,Hydro and pumped storage,renewable,264552493
+2021,Hydro and pumped storage,renewable,257259093
+2024,Hydro and pumped storage,renewable,250430785
+2023,Hydro and pumped storage,renewable,250361618
+2025,Hydro and pumped storage,renewable,247442027
+2026,Hydro and pumped storage,renewable,72303021
+2024,Natural gas,non-renewable,1735263440
+2025,Natural gas,non-renewable,1689970786
+2023,Natural gas,non-renewable,1662499307
+2022,Natural gas,non-renewable,1545579183
+2020,Natural gas,non-renewable,1487221753
+2019,Natural gas,non-renewable,1474766764
+2021,Natural gas,non-renewable,1444248374
+2026,Natural gas,non-renewable,387303185
+2019,Nuclear,non-renewable,839051439
+2025,Nuclear,non-renewable,787653592
+2020,Nuclear,non-renewable,783706090
+2024,Nuclear,non-renewable,781790901
+2021,Nuclear,non-renewable,781722935
+2023,Nuclear,non-renewable,773792472
+2022,Nuclear,non-renewable,770637016
+2026,Nuclear,non-renewable,201636283
+2023,Other,non-renewable,83004460
+2022,Other,non-renewable,76741543
+2020,Other,non-renewable,73553476
+2021,Other,non-renewable,73134692
+2019,Other,non-renewable,71612773
+2024,Other,non-renewable,60295164
+2025,Other,non-renewable,49117144
+2026,Other,non-renewable,13656185
+2025,Other energy storage,non-renewable,268
+2026,Other energy storage,non-renewable,3
+2024,Other energy storage,non-renewable,0
+2022,Petroleum,non-renewable,10959787
+2020,Petroleum,non-renewable,10129106
+2021,Petroleum,non-renewable,8484655
+2025,Petroleum,non-renewable,7820778
+2019,Petroleum,non-renewable,7041156
+2023,Petroleum,non-renewable,6505704
+2024,Petroleum,non-renewable,5902204
+2026,Petroleum,non-renewable,4006874
+2025,Pumped storage,non-renewable,948045
+2026,Pumped storage,non-renewable,307276
+2024,Pumped storage,non-renewable,297835
+2025,Solar,renewable,267758686
+2024,Solar,renewable,204974511
+2023,Solar,renewable,148857439
+2022,Solar,renewable,126916148
+2021,Solar,renewable,100257249
+2020,Solar,renewable,77639584
+2019,Solar,renewable,63749643
+2026,Solar,renewable,62593326
+2025,Solar with integrated battery storage,renewable,4128772
+2026,Solar with integrated battery storage,renewable,1182098
+2024,Solar with integrated battery storage,renewable,7583
+2026,Unknown,non-renewable,0
+2024,Unknown,non-renewable,0
+2025,Unknown,non-renewable,0
+2024,Unknown energy storage,non-renewable,-704538
+2026,Unknown energy storage,non-renewable,-790280
+2025,Unknown energy storage,non-renewable,-8624572
+2025,Wind,renewable,463531163
+2024,Wind,renewable,452563474
+2022,Wind,renewable,435690473
+2023,Wind,renewable,423401367
+2021,Wind,renewable,381380651
+2020,Wind,renewable,333405977
+2019,Wind,renewable,295648595
+2026,Wind,renewable,134717949
+2025,Wind with integrated battery storage,renewable,0
+2026,Wind with integrated battery storage,renewable,0

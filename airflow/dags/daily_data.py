@@ -99,7 +99,7 @@ def main():
         project_config = PROJECT,
         execution_config = EXECUTION,
         render_config = RenderConfig(
-            select = ["path:models/staging+", "path:models/intermediate+"] 
+            select = ["path:models/+"]
         ),
         operator_args={
             "vars": {
