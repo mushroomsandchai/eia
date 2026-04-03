@@ -1,23 +1,19 @@
 variable "bucket_name" {
   type        = string
-  description = "EC2 instance type for the web server"
-  default     = "YOUR_BUCKET_NAME_HERE"
+  description = "Bucket name to use as datalake. Blobs auto-exipre."
 }
 
 variable "dataset_name" {
   type        = string
-  description = "EC2 instance type for the web server"
-  default     = "YOUR_DATASET_NAME_HERE"
+  description = "Dataset name in the datawarehouse"
 }
 
 variable "project_id" {
   type        = string
-  description = "EC2 instance type for the web server"
-  default     = "YOUR_PROJECT_ID_HERE"
+  description = "Google Cloud Project ID"
 }
 
 variable "project_location" {
   type        = string
-  description = "EC2 instance type for the web server"
-  default     = "YOUR_PROJECT_LOCATION_HERE"
+  description = "Google Cloud Project Location"
 }

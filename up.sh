@@ -1,3 +1,18 @@
+set -a
+source .env
+set +a
+
+cd terraform
+
+export TF_VAR_project_id=$PROJECT
+export TF_VAR_bucket_name=$BUCKET_NAME
+export TF_VAR_dataset_name=$DATASET
+export TF_VAR_project_location=$DATASET_LOCATION
+export GOOGLE_APPLICATION_CREDENTIALS=$LOCAL_GCS_JSON_CREDENTIALS_PATH
+
+
+terraform init && terraform apply -auto-approve && cd ..
+
 mkdir -p airflow/dags airflow/logs
 mkdir -p dbt
 sudo chown -R $(id -u):0 airflow/dags airflow/logs
