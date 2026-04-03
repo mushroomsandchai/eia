@@ -79,12 +79,32 @@ def main():
     @task.bash
     def gzip():
         return("gzip /tmp/historical_data/*")
+    
+    from cosmos import DbtTaskGroup
+    from cosmos.config import RenderConfig
+    from helpers.dbt_configuration import dbt_objects
+
+    PROFILE, PROJECT, EXECUTION = dbt_objects()
+
+    dbt_models = DbtTaskGroup(
+        profile_config = PROFILE,
+        project_config = PROJECT,
+        execution_config = EXECUTION,
+        render_config = RenderConfig(
+            select = ["path:models/+"]
+        ),
+        operator_args={
+            "vars": {
+                "run_date": "{{ ds }}"
+            }
+        }
+    )
 
     unzipper = unzip()
     loader = bucket()
     ingest = table()
     zipper = gzip()
 
-    unzipper >> loader >> ingest >> zipper
+    unzipper >> loader >> ingest >> dbt_models >> zipper
 
 main()
