@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from airflow.sdk import task, dag, get_current_context
-from airflow.exceptions import AirflowSkipException
+from airflow.operators.empty import EmptyOperator
 
 default_args = {
     'retries': 2,
@@ -54,6 +54,17 @@ def main():
         load_table(endpoint['type'], uri, interval = 'daily')
 
 
+    @task.branch
+    def decide_branch():
+        from datetime import datetime
+        context = get_current_context()
+        logical_date = context['logical_date'].date()
+
+        if logical_date == datetime.now().date():
+            return "run_dbt"
+        else:
+            return "skip_dbt"
+
     from cosmos import DbtTaskGroup
     from cosmos.config import RenderConfig
     from helpers.dbt_configuration import dbt_objects
@@ -78,6 +89,14 @@ def main():
     ingestion = ingest.expand(endpoint = endpoints)    
     loader = load_tables.expand(endpoint = endpoints)
 
-    ingestion >> loader >> dbt_merge
+
+    run_dbt = EmptyOperator(task_id="run_dbt")
+    skip_dbt = EmptyOperator(task_id="skip_dbt")
+
+    branch = decide_branch()
+
+    ingestion >> loader >> branch
+    branch >> run_dbt >> dbt_merge
+    branch >> skip_dbt
 
 main()
