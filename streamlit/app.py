@@ -18,6 +18,9 @@ footnote_text = "<br>".join(footnote_lines)
 
 # Display footnote at the top
 st.markdown(
+    f"<p style='font-size:1.2em; color:grey; margin-bottom:0.1em'>File source for the following graphs:</p>",
+    unsafe_allow_html=True)
+st.markdown(
     f"<p style='font-size:0.8em; color:gray; margin-bottom:0.5em'>{footnote_text}</p>",
     unsafe_allow_html=True
 )

@@ -76,6 +76,8 @@ def main():
             else:
                 raise FileNotFoundError("File not found.")
             
+            load_job.result()
+            
     @task.bash
     def gzip():
         return("gzip /tmp/historical_data/*")
