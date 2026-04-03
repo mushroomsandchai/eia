@@ -79,3 +79,6 @@ def load_table(type, start_date = None, end_date = None, interval = 'daily'):
                 destination = table_id,
                 job_config = job_config
             )
+
+    load_job.result()
+    print(f"Loaded {load_job.output_rows} records.")

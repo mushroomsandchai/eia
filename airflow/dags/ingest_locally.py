@@ -77,6 +77,7 @@ def main():
                 raise FileNotFoundError("File not found.")
             
             load_job.result()
+            print(f"Loaded {load_job.output_rows} records.")
             
     @task.bash
     def gzip():

@@ -21,6 +21,20 @@ def fetch_table(table_name, csv_path, project, dataset):
             job_id=job_id
         )
         df = query_job.result().to_dataframe()
+
+        if "total_generation" in df.columns:
+            df["total_generation"] = pd.to_numeric(df["total_generation"], errors="coerce")
+        if "year" in df.columns:
+            df["year"] = pd.to_numeric(df["year"], errors="coerce")
+        if "energy_type" in df.columns:
+            df["energy_type"] = df["energy_type"].fillna("Unknown").astype(str)
+        if "fuel" in df.columns:
+            df["fuel"] = df["fuel"].astype(str)
+        if "recorded_date" in df.columns:
+            df["recorded_date"] = pd.to_datetime(df["recorded_date"].astype(str).str.replace(".", "", regex=False))
+        if "interchange" in df.columns:
+            df["interchange"] = pd.to_numeric(df["interchange"], errors="coerce")
+
         return df, "BigQuery"
     except Exception:
         df = pd.read_csv(csv_path)
