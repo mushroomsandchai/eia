@@ -17,7 +17,7 @@ default_args = {
                         This way, all the data gets loaded at once and is ready for daily consumption of API values.""",
     schedule = "@monthly",
     start_date = datetime(2019, 1, 1),
-    end_date = datetime(2019, 1, 31),
+    end_date = datetime(2026, 2, 28),
     catchup = True,
     max_active_runs = 4,
     default_args = default_args,
