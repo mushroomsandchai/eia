@@ -13,7 +13,6 @@ select
         when ba.region_or_country_name = 'Mexico' then 'Mexico'
         else 'United States of America'
     end as country
-
 from
     {{ ref('int_generation') }} g
 join
