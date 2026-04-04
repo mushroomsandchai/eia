@@ -41,14 +41,12 @@ done
 echo " Done!"
 
 echo -e "\n\nAirflow is UP!"
-echo -e "\nExpose port 8080 and visit http://localhost:8080/ for airflow UI.\n\n"
+
+echo -e "\nExpose port 8082 and visit http://localhost:8082/ for dbt docs."
+echo -e "Expose port 8501 and visit http://localhost:8501/ for streamlit."
+echo -e "Expose port 8080 and visit http://localhost:8080/ for airflow UI.\n\n"
 # Extract and pretty-print Airflow credentials
 creds=$(docker exec airflow cat /opt/airflow/simple_auth_manager_passwords.json.generated)
 echo "Airflow credentials:"
 echo "user: $(echo $creds | jq -r 'keys[0]')"
 echo "password: $(echo $creds | jq -r '.[keys[0]]')"
-
-
-echo -e "\nExpose port 8080 and visit http://localhost:8080/ for airflow UI.\n\n"
-echo -e "\nExpose port 8082 and visit http://localhost:8082/ for dbt docs.\n\n"
-echo -e "\nExpose port 8501 and visit http://localhost:8501/ for streamlit.\n\n"
