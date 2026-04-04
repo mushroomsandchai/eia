@@ -48,6 +48,7 @@ eia/
 
 ### Prerequisites
 - Docker & Docker Compose
+- Terraform
 - Git
 
 ### Setup
@@ -59,18 +60,16 @@ cd eia
 
 
 ### Environment Variables
-# Configure `.env` for:
+# Configure the following variables in `.env`:
+LOCAL_GCS_JSON_CREDENTIALS_PATH=PATH_TO_JSON_KEY        # Service Key for GCP
+PROJECT=PROJECT_ID                                      # GCS PROJECT ID
+BUCKET_NAME=BUCKET_NAME                                 # GCP BUCKET NAME
+DATASET=DATASET_NAME                                    # BQ Dataset name
+DATASET_LOCATION=US                                     # BQ Dataset location
 
-# Configure terraform/variables.tf for:
-# - GCP Bucket
-# - GCP Dataset
-# - GCP Project-ID
-# - GCP Credentials
-
-# - Database credentials
-# - Airflow settings
-# - EIA API keys
-# - Cloud provider credentials
+EIA_API=EIA_API_KEY                                     # API Key for EIA
+# The file has been loaded with an API scrapped off of stackoverflow.
+# It is highly recommended to register your API key by visiting: https://www.eia.gov/opendata/register.php
 
 # Make startup script executable
 chmod +x up.sh
@@ -78,6 +77,7 @@ chmod +x up.sh
 # Start all services
 ./up.sh
 ```
+It is recommended to go through `up.sh` startup script before running it.
 
 ### Accessing Services
 - #### **Airflow UI**: http://localhost:8080
@@ -126,12 +126,13 @@ Note: `.env` file is preloaded with an API key which was scrapped from stackover
 > **The DAGs must be enabled in the following order.** Each DAG depends on the outputs of the previous one. Enabling them out of order may result in missing reference data or failed tasks.
 
 ```
-                          local_ingestion        ← preferred (reads Parquet)
-                        /                  \
-seed_lookup_tables  →                       →  daily_data (scheduled)
-      (once)          \                  /
-                        monthly_           ← alternative (hits EIA API directly)
-                        historical_data
+                                    local_ingestion
+                                (preferred - reads Parquet)
+                      /                                             \
+seed_lookup_tables  →                                                 →  daily_data (scheduled)
+      (once)          \                                              /
+                                  monthly_historical_data
+                            (alternative - hits EIA API directly)
 ```
 
 #### Step 1 — `seed_lookup_tables`
@@ -161,7 +162,7 @@ Wait for all tasks to show **Success** before proceeding.
 
 #### Step 3 — `daily_data`
 
-After the historical ingestion is complete, enable this DAG. It runs on a daily schedule and incrementally pulls new EIA data.
+After the historical ingestion is complete, enable this DAG. It runs on a daily schedule and incrementally pulls new EIA data and loads into our landing layer in BigQuery. This landing layer is essentially our source of truth and contains all the records pulled from EIA. It runs the dbt models only when it pulls today's data, which in turn saves compute costs in GCP.
 
 ```
 Airflow UI → DAGs → daily_data → Enable
@@ -185,16 +186,6 @@ airflow dags trigger my_dag
 - **Local Development** — Complete stack runs in Docker for easy onboarding
 - **Cloud-Ready** — Extendable to major cloud data warehouses (Snowflake, BigQuery, Redshift)
 
-## Development
-
-### Running dbt Locally
-```bash
-cd dbt
-dbt debug           # Verify connections
-dbt run             # Execute all models
-dbt test            # Run data quality tests
-dbt docs generate   # Build documentation
-```
 
 ## Deployment
 
@@ -203,9 +194,8 @@ The included Terraform configuration handles infrastructure provisioning. Modify
 ## Notes
 
 - `local_ingestion` and `monthly_historical_data` produce the same result. Use `local_ingestion` whenever possible to avoid hammering the EIA API with thousands of requests.
-- Do **not** enable `daily_data` before the historical ingestion step has completed successfully, as it relies on the data state established by that run.
+- Do **not** enable `daily_data` before the historical ingestion step has completed successfully, as our intermediate layers are incremental.
 - `seed_lookup_tables` should be re-triggered any time the underlying reference data needs to be refreshed.
 - Uses **Cosmos** to run dbt as Airflow tasks — no separate dbt CLI calls needed
 - Designed for **local development** with Docker Compose
 - **Cloud-agnostic** — switch data warehouses by updating dbt profiles
-- PostgreSQL backend suitable for dev/test; consider managed databases for production
