@@ -32,6 +32,7 @@ eia/
 ├── streamlit/                  # Dashboard
 │   ├── app.py                  # Main app
 │   └── charts.py               # Helper to create charts
+│   └── *.csv                   # CSV files to populate dashboard
 ├── terraform/                  # Infrastructure as Code
 │   ├── main.tf                 # Primary resources
 │   └── variables.tf            # Terraform variables
@@ -59,18 +60,17 @@ cd eia
 
 ### Environment Variables
 # Configure `.env` for:
-# - Database credentials
-# - Airflow settings
-# - EIA API keys
-# - Cloud provider credentials
 
 # Configure terraform/variables.tf for:
 # - GCP Bucket
 # - GCP Dataset
 # - GCP Project-ID
+# - GCP Credentials
 
-# Build Docker images
-docker compose build
+# - Database credentials
+# - Airflow settings
+# - EIA API keys
+# - Cloud provider credentials
 
 # Make startup script executable
 chmod +x up.sh
@@ -81,6 +81,7 @@ chmod +x up.sh
 
 ### Accessing Services
 - #### **Airflow UI**: http://localhost:8080
+  ###### Run the following command in case you start docker services manually without using the `./up.sh` script.<br>Airflow dynamically creates a password for each airflow instance and stores it in `/opt/airflow/simple_auth_manager_passwords.json.generated` file. Access it via the following command.
       docker exec airflow cat simple_auth_manager_passwords.json.generated
 - #### **Streamlit**: http://localhost:8501
 - #### **PostgreSQL**: http://localhost:5432
@@ -95,7 +96,7 @@ chmod +x up.sh
 
 ## Managing DAGs
 
-Before triggering any DAGs, make sure the following variables are configured in the `.env` file provided in the project root. These are required for Airflow and dbt to authenticate with GCP and locate the correct project, bucket, and dataset:
+Before triggering any DAGs or even building the docker image, make sure the following variables are configured in the `.env` file provided in the project root. These are required for Airflow, dbt, terraform and streamlit to authenticate with GCP and locate the correct project, bucket, and dataset:
 
 ```env
 # Airflow and dbt shared variables
@@ -109,6 +110,7 @@ DATASET_LOCATION=US         # BigQuery dataset location
 ```
 
 Once these are set, restart your services (`./up.sh`) and trigger the DAGs in the order described below.
+Note: `.env` file is preloaded with an API key which was scrapped from stackoverlow, make sure to register and populate it with your own key to have unrestricted access in the future.
 
 ### DAGs Overview
 
