@@ -2,10 +2,6 @@
 
 A data pipeline for Energy Information Administration (EIA) data using Apache Airflow, dbt, cosmos and PostgreSQL with infrastructure as code via Terraform.
 
-## Based on the evaluation criteria, here's a problem description worth the full 4 points:
-
----
-
 ## Problem Description
 
 The U.S. Energy Information Administration (EIA) publishes near real-time and historical data on electricity generation, grid demand, and cross-border energy flows across the United States. While this data is freely accessible via the EIA API, it is returned in a raw, fragmented format, split across multiple endpoints, inconsistently typed, and lacking the joins and aggregations needed to draw meaningful conclusions.
