@@ -12,7 +12,7 @@ default_args = {
                         demand forecast and demand by subregion data by month from EIA API and store in GCP bucket.""",
     schedule = "@monthly",
     start_date = datetime(2019, 1, 1),
-    end_date = datetime(2019, 1, 31),
+    end_date = datetime(2026, 2, 28),
     catchup = True,
     max_active_runs = 4,
     default_args = default_args,
