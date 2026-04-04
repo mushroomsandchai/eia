@@ -36,7 +36,7 @@ echo -e "If the pipeline is running for the first time, streamlit will use prelo
 echo -n "Waiting for Airflow UI"
 until curl -s -o /dev/null localhost:8080; do
     echo -n "."
-    sleep 10
+    sleep 5
 done
 echo " Done!"
 
@@ -47,3 +47,8 @@ creds=$(docker exec airflow cat /opt/airflow/simple_auth_manager_passwords.json.
 echo "Airflow credentials:"
 echo "user: $(echo $creds | jq -r 'keys[0]')"
 echo "password: $(echo $creds | jq -r '.[keys[0]]')"
+
+
+echo -e "\nExpose port 8080 and visit http://localhost:8080/ for airflow UI.\n\n"
+echo -e "\nExpose port 8082 and visit http://localhost:8082/ for dbt docs.\n\n"
+echo -e "\nExpose port 8501 and visit http://localhost:8501/ for streamlit.\n\n"

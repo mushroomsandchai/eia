@@ -35,15 +35,22 @@ services:
       - ./batch_files:/tmp/historical_data
       - "${LOCAL_GCS_JSON_CREDENTIALS_PATH}:${CONTAINER_JSON_CREDENTIALS_PATH}.cred.json"
     ports:
-      - "8080:8080"
-      - "8501:8501"
-    command: bash -c "
-      streamlit run /opt/airflow/streamlit/app.py &
-      cd $DBT_PROJECT_PATH &&
-      $DBT_VIRTUAL_ENVIRONMENT_PATH deps &&
-      $DBT_VIRTUAL_ENVIRONMENT_PATH parse &&
-      airflow standalone
-      "
+      - "8080:8080"   # airflow
+      - "8501:8501"   # streamlit
+      - "8082:8082"   # dbt docs
+    command:
+      - bash
+      - -c
+      - |
+          streamlit run /opt/airflow/streamlit/app.py &
+          cd $$DBT_PROJECT_PATH &&
+          $$DBT_VIRTUAL_ENVIRONMENT_PATH deps &&
+          $$DBT_VIRTUAL_ENVIRONMENT_PATH parse &&
+          airflow standalone &
+          /opt/airflow/.dbt_venv/bin/dbt docs generate --project-dir /opt/airflow/dbt --profiles-dir /opt/airflow/dbt &&
+          cd /opt/airflow/dbt/target &&
+          python3 -m http.server 8082 --bind 0.0.0.0 &
+          wait
 
 volumes:
   postgres_data:
