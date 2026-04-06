@@ -17,6 +17,7 @@ streamlit/
 
 ### 1. Electricity Generation
 ![electricity generation by fuel](../images/generation.jpg)
+
 A stacked area chart showing annual electricity generation by fuel type (Coal, Natural gas, Nuclear, Wind, Solar, etc.).
 
 - **Fuel filter** — multiselect to include/exclude specific fuel types
@@ -24,6 +25,7 @@ A stacked area chart showing annual electricity generation by fuel type (Coal, N
 
 ### 2. Energy Distribution — Renewable vs Non-Renewable
 ![energy distribution by type of fuel](../images/distribution.jpg)
+
 A normalised stacked area chart comparing the share of renewable vs non-renewable generation over time. Includes an expandable data table below the chart.
 
 ### 3. Demand, Forecast & Net Generation
