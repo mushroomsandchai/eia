@@ -59,7 +59,7 @@ eia/
 ```
 
 ## Architecture
-
+![eia pipeline architecture](images/architecture.svg)
 
 ## Quick Start
 
