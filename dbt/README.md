@@ -9,12 +9,17 @@ The full lineage graph from dbt docs, showing sources → staging → intermedia
 ![models lineage](../images/dbt_lineage.jpg)
 
 ### Sources (landing layer)
-| Source | Description |
-|--------|-------------|
-| `landing.landing_generation` | Raw electricity generation data ingested by Airflow |
-| `landing.landing_demand_by_subregion` | Raw demand data broken down by balancing authority subregion |
-| `landing.landing_interchange` | Raw cross-border interchange data (U.S. ↔ Canada/Mexico) |
-| `landing.landing_demand_forecast` | Raw demand forecast data |
+
+The landing layer is the source of truth for all raw EIA data. Tables are written to by Airflow DAGs, partitioned by day on `partition_date`, and clustered to support efficient downstream queries.
+
+| Source | Description | Partition | Cluster Fields |
+|--------|-------------|-----------|----------------|
+| `landing.landing_generation` | Raw electricity generation data ingested by Airflow | `partition_date` (DAY) | `respondent`, `fueltype` |
+| `landing.landing_demand_by_subregion` | Raw demand data broken down by balancing authority subregion | `partition_date` (DAY) | `parent`, `subba` |
+| `landing.landing_interchange` | Raw cross-border interchange data (U.S. ↔ Canada/Mexico) | `partition_date` (DAY) | `fromba`, `toba` |
+| `landing.landing_demand_forecast` | Raw demand forecast data | `partition_date` (DAY) | `respondent`, `type` |
+
+Clustering fields are chosen to match the most common upstream query patterns — generation queries typically filter or group by respondent and fuel type, interchange queries by source/destination balancing authority, and demand queries by parent region or forecast type.
 
 ### Seeds
 | Seed | Description |
@@ -51,43 +56,6 @@ The full lineage graph from dbt docs, showing sources → staging → intermedia
 | `marts_interchange` | Final analytics table for cross-border interchange — consumed by Streamlit |
 | `marts_forecast` | Final analytics table for demand and forecast — consumed by Streamlit |
 
----
-
-## Setup
-
-Dependencies are managed inside the Docker container. If running dbt locally outside Docker:
-
-```bash
-cd dbt
-pip install dbt-core dbt-bigquery
-dbt deps
-dbt debug    # verify connection
-```
-
-Ensure `profiles.yml` is configured with your BigQuery project and dataset, or that the `PROJECT` and `DATASET` environment variables are set (the container builds a profile from these automatically).
-
----
-
-## Running the Project
-
-```bash
-# Run all models
-dbt build
-
-# Run a specific layer
-dbt run --select staging
-dbt run --select intermediate
-dbt run --select marts
-
-# Run tests
-dbt test
-
-# Generate and serve docs
-dbt docs generate
-dbt docs serve --host 0.0.0.0 --port 8082
-```
-
-> Inside Docker, docs are generated automatically on startup and served via `python3 -m http.server 8082`. You do not need to run these manually.
 
 ---
 
