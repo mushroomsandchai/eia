@@ -16,21 +16,25 @@ streamlit/
 ## Dashboard Sections
 
 ### 1. Electricity Generation
+![electricity generation by fuel](../images/generation.jpg)
 A stacked area chart showing annual electricity generation by fuel type (Coal, Natural gas, Nuclear, Wind, Solar, etc.).
 
 - **Fuel filter** — multiselect to include/exclude specific fuel types
 - **View mode** — toggle between absolute generation (millions of units) and share of total (%)
 
 ### 2. Energy Distribution — Renewable vs Non-Renewable
+![energy distribution by type of fuel](../images/distribution.jpg)
 A normalised stacked area chart comparing the share of renewable vs non-renewable generation over time. Includes an expandable data table below the chart.
 
 ### 3. Demand, Forecast & Net Generation
+![demand v demand forecast v net generation](../images/demand_vs_forecast_vs_generation.jpg)
 A line chart plotting three series over the last 30 days:
 - **Actual Demand**
 - **Demand Forecast**
 - **Net Generation**
 
 ### 4. Cross-border Electricity Interchange
+![electricity interchange between countries](../images/interchange.jpg)
 A line chart showing electricity interchange (MW) between the U.S., Canada, and Mexico over time.
 
 ## Data Loading
@@ -64,4 +68,4 @@ pip install streamlit google-cloud-bigquery pandas altair
 streamlit run app.py
 ```
 
-> Ensure `PROJECT` and `DATASET` are exported in your shell, or the app will fall back to CSV data.
+> Ensure `PROJECT` and `DATASET` are exported in your shell, or the app will fall back to CSV data. Make sure the csv_path in `charts.py` points to the correct directory as well.

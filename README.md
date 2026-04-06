@@ -182,16 +182,6 @@ After the historical ingestion is complete, enable this DAG. It runs on a daily 
 Airflow UI → DAGs → daily_data → Enable
 ```
 
-### DAG CLI Commands
-
-```bash
-# List all DAGs
-airflow dags list
-
-# Trigger a DAG
-airflow dags trigger my_dag
-```
-
 ## Key Features
 
 - **Layered Transformation Model** — Clear separation of concerns with staging, intermediate, and mart layers
