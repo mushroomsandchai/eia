@@ -12,5 +12,12 @@ with renamed as (
         cast(ingestion_time as timestamp) as ingestion_time
     from
         {{ source('landing', 'landing_demand_forecast') }}
+    where 1 = 1
+        and partition_date is not null
+        and period is not null
+        and respondent is not null
+        and type is not null
+        and value_units is not null
+        and ingestion_time is not null
 )
 select * from renamed
