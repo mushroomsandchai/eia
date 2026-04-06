@@ -103,9 +103,6 @@ It is recommended to go through `up.sh` startup script before running it.
 - #### **Streamlit**: http://localhost:8501
 - #### **PostgreSQL**: http://localhost:5432
 
-## Architecture
-![eia pipeline architecture](../images/architecture.svg)
-
 ### Data Flow
 1. **Orchestration** — Airflow schedules and triggers pipelines
 2. **Transformation** — dbt processes raw data through staging → intermediate → marts layers
