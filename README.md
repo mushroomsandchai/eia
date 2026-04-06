@@ -58,6 +58,9 @@ eia/
 └── up.sh                       # Quick start script
 ```
 
+## Architecture
+
+
 ## Quick Start
 
 ### Prerequisites
@@ -101,6 +104,7 @@ It is recommended to go through `up.sh` startup script before running it.
 - #### **PostgreSQL**: http://localhost:5432
 
 ## Architecture
+![eia pipeline architecture](../images/architecture.svg)
 
 ### Data Flow
 1. **Orchestration** — Airflow schedules and triggers pipelines
