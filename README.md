@@ -22,7 +22,8 @@ This project orchestrates data workflow for EIA data:
 
 - **Apache Airflow** — DAG orchestration and workflow scheduling
 - **dbt** — SQL-based data transformations with layered models
-- **PostgreSQL** — Metadata backend and data warehouse
+- **PostgreSQL** — Metadata backend
+- **BigQuery** - Data Warehouse
 - **Airflow Cosmos** — Seamless dbt integration within Airflow
 - **Terraform** — Infrastructure provisioning and management
 - **Docker** — Containerized local development environment
